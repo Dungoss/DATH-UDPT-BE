@@ -15,7 +15,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login','register']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register']]);
     }
 
     /**
@@ -27,7 +27,7 @@ class AuthController extends Controller
     {
         $credentials = request(['email', 'password']);
 
-        if (! $token = auth()->attempt($credentials)) {
+        if (!$token = auth()->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
@@ -36,7 +36,7 @@ class AuthController extends Controller
 
     public function register()
     {
-        $credentials = request(['name','email', 'password']);
+        $credentials = request(['name', 'email', 'password']);
         $credentials['password'] = bcrypt($credentials['password']);
         User::create($credentials);
 

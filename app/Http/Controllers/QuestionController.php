@@ -10,15 +10,17 @@ class QuestionController extends Controller
     //
     public function index()
     {
-        $users = DB::table('question')->get();
-        return response()->json($users);
+        $questions = DB::table('question')
+            ->orderBy('postingTime', 'desc')
+            ->get();
+        return response()->json($questions);
     }
+
 
     public function store(Request $request)
     {
         // Validate the request data
         $validatedData = $request->validate([
-            'id' => 'required',
             'userID' => 'required',
             'questionContent' => 'required',
             'categoryID' => 'required',
@@ -30,7 +32,6 @@ class QuestionController extends Controller
 
         // Insert a new record into the questions table
         DB::table('question')->insert([
-            'id' => $validatedData['id'],
             'userID' => $validatedData['userID'],
             'questionContent' => $validatedData['questionContent'],
             'categoryID' => $validatedData['categoryID'],

@@ -4,6 +4,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\AnswerController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\UserController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -19,15 +23,26 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('questions', [QuestionController::class,'index']);
-Route::post('/questions', [QuestionController::class, 'store']);
+Route::get('users', [UserController::class, 'index']);
 
-Route::post('login', [AuthController::class,'login']);
-Route::post('register', [AuthController::class,'register']);
+Route::get('questions', [QuestionController::class, 'index']);
+Route::post('questions', [QuestionController::class, 'store']);
+
+Route::get('comments', [CommentController::class, 'index']);
+Route::post('comments', [CommentController::class, 'store']);
+
+Route::get('answers', [AnswerController::class, 'index']);
+Route::post('answers', [AnswerController::class, 'store']);
+
+Route::get('category', [CategoryController::class, 'index']);
+Route::post('category', [CategoryController::class, 'store']);
+
+Route::post('login', [AuthController::class, 'login']);
+Route::post('register', [AuthController::class, 'register']);
 
 
-Route::group(['middleware'=>'api'],function(){
-    Route::post('logout', [AuthController::class,'logout']);
-    Route::post('refresh', [AuthController::class,'refresh']);
-    Route::post('me', [AuthController::class,'me']);
+Route::group(['middleware' => 'api'], function () {
+    Route::post('logout', [AuthController::class, 'logout']);
+    Route::post('refresh', [AuthController::class, 'refresh']);
+    Route::post('me', [AuthController::class, 'me']);
 });
