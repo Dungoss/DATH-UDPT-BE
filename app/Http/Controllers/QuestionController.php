@@ -46,4 +46,52 @@ class QuestionController extends Controller
             'message' => 'Question created successfully',
         ], 201);
     }
+
+    public function destroy($id)
+    {
+        // Find the question by id
+        $question = DB::table('question')->where('id', $id)->first();
+
+        // Check if the question exists
+        if (!$question) {
+            return response()->json([
+                'message' => 'Question not found',
+            ], 404);
+        }
+
+        // Delete the question
+        DB::table('question')->where('id', $id)->delete();
+
+        // Return a JSON response
+        return response()->json([
+            'message' => 'Question deleted successfully',
+        ]);
+    }
+    public function updateStatusApproved(Request $request, $id)
+    {
+        // Validate the request data
+        $validatedData = $request->validate([
+            'statusApproved' => 'required|in:0,1',
+        ]);
+
+        // Find the question by id
+        $question = DB::table('question')->where('id', $id)->first();
+
+        // Check if the question exists
+        if (!$question) {
+            return response()->json([
+                'message' => 'Question not found',
+            ], 404);
+        }
+
+        // Update the statusApproved field
+        DB::table('question')->where('id', $id)->update([
+            'statusApproved' => $validatedData['statusApproved'],
+        ]);
+
+        // Return a JSON response
+        return response()->json([
+            'message' => 'Question status updated successfully',
+        ]);
+    }
 }

@@ -27,6 +27,8 @@ Route::get('users', [UserController::class, 'index']);
 
 Route::get('questions', [QuestionController::class, 'index']);
 Route::post('questions', [QuestionController::class, 'store']);
+Route::delete('questions/{id}', [QuestionController::class, 'destroy']);
+Route::put('questions/{id}/status', [QuestionController::class, 'updateStatusApproved']);
 
 Route::get('comments', [CommentController::class, 'index']);
 Route::post('comments', [CommentController::class, 'store']);
