@@ -8,6 +8,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\AnswerController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\TagController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -38,6 +39,9 @@ Route::post('answers', [AnswerController::class, 'store']);
 
 Route::get('category', [CategoryController::class, 'index']);
 Route::post('category', [CategoryController::class, 'store']);
+
+Route::get('tag', [TagController::class, 'index']);
+Route::post('tag', [TagController::class, 'store']);
 
 Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);

@@ -16,23 +16,24 @@ class QuestionController extends Controller
         return response()->json($questions);
     }
 
-
     public function store(Request $request)
     {
         // Validate the request data
         $validatedData = $request->validate([
             'userID' => 'required',
+            'questionTitle' => 'required',
             'questionContent' => 'required',
             'categoryID' => 'required',
             'totalVotes' => 'required',
             'postingTime' => 'required',
             'totalAnswer' => 'required',
-            'statusApproved' => 'nullable|statusApproved',
+            'statusApproved' => 'required',
         ]);
 
         // Insert a new record into the questions table
         DB::table('question')->insert([
             'userID' => $validatedData['userID'],
+            'questionTitle' => $validatedData['questionTitle'],
             'questionContent' => $validatedData['questionContent'],
             'categoryID' => $validatedData['categoryID'],
             'totalVotes' => $validatedData['totalVotes'],
