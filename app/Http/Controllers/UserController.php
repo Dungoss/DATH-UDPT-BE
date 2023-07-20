@@ -16,19 +16,24 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        // Validate the request data
         $validatedData = $request->validate([
             'categoryName' => 'required',
         ]);
-
-        // Insert a new record into the questions table
         DB::table('category')->insert([
             'categoryName' => $validatedData['categoryName'],
         ]);
-
-        // Return a JSON response
         return response()->json([
             'message' => 'category created successfully',
         ], 201);
+    }
+
+    public function getQuestionIDsByUserID($userID)
+    {
+        $questionIDs = DB::table('user_question_spam')
+            ->where('userID', $userID)
+            ->pluck('questionID')
+            ->all();
+
+        return response()->json($questionIDs);
     }
 }

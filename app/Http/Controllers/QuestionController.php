@@ -18,7 +18,6 @@ class QuestionController extends Controller
 
     public function store(Request $request)
     {
-        // Validate the request data
         $validatedData = $request->validate([
             'userID' => 'required',
             'questionTitle' => 'required',
@@ -28,9 +27,9 @@ class QuestionController extends Controller
             'postingTime' => 'required',
             'totalAnswer' => 'required',
             'statusApproved' => 'required',
+            'tagID' => 'required',
+            'spam' => 'required',
         ]);
-
-        // Insert a new record into the questions table
         DB::table('question')->insert([
             'userID' => $validatedData['userID'],
             'questionTitle' => $validatedData['questionTitle'],
@@ -40,9 +39,9 @@ class QuestionController extends Controller
             'postingTime' => $validatedData['postingTime'],
             'totalAnswer' => $validatedData['totalAnswer'],
             'statusApproved' => $validatedData['statusApproved'],
+            'tagID' => $validatedData['tagID'],
+            'spam' => $validatedData['spam'],
         ]);
-
-        // Return a JSON response
         return response()->json([
             'message' => 'Question created successfully',
         ], 201);
@@ -50,49 +49,65 @@ class QuestionController extends Controller
 
     public function destroy($id)
     {
-        // Find the question by id
         $question = DB::table('question')->where('id', $id)->first();
-
-        // Check if the question exists
         if (!$question) {
             return response()->json([
                 'message' => 'Question not found',
             ], 404);
         }
-
-        // Delete the question
         DB::table('question')->where('id', $id)->delete();
-
-        // Return a JSON response
         return response()->json([
             'message' => 'Question deleted successfully',
         ]);
     }
     public function updateStatusApproved(Request $request, $id)
     {
-        // Validate the request data
         $validatedData = $request->validate([
             'statusApproved' => 'required|in:0,1',
         ]);
-
-        // Find the question by id
         $question = DB::table('question')->where('id', $id)->first();
-
-        // Check if the question exists
         if (!$question) {
             return response()->json([
                 'message' => 'Question not found',
             ], 404);
         }
-
-        // Update the statusApproved field
         DB::table('question')->where('id', $id)->update([
             'statusApproved' => $validatedData['statusApproved'],
         ]);
-
-        // Return a JSON response
         return response()->json([
             'message' => 'Question status updated successfully',
+        ]);
+    }
+
+    public function increaseSpamCount($id)
+    {
+        $question = DB::table('question')->where('id', $id)->first();
+        if (!$question) {
+            return response()->json([
+                'message' => 'Question not found',
+            ], 404);
+        }
+        DB::table('question')->where('id', $id)->update([
+            'spam' => $question->spam + 1,
+        ]);
+        return response()->json([
+            'message' => 'Spam count increased successfully',
+        ]);
+    }
+
+    public function decreaseSpamCount($id)
+    {
+        $question = DB::table('question')->where('id', $id)->first();
+        if (!$question) {
+            return response()->json([
+                'message' => 'Question not found',
+            ], 404);
+        }
+        DB::table('question')->where('id', $id)->update([
+            'spam' => $question->spam - 1,
+        ]);
+        return response()->json([
+            'message' => 'Spam count decreased successfully',
         ]);
     }
 }
