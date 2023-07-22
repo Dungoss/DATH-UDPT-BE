@@ -32,6 +32,11 @@ Route::post('users/add-spam', [UserController::class, 'storeQuestionSpam']);
 Route::post('users/delete-spam', [UserController::class, 'deleteQuestionSpam']);
 Route::post('users/{id}/update-avatar', [UserController::class, 'updateAvatar']);
 Route::post('users/{id}/update-wallpaper', [UserController::class, 'updateWallpaper']);
+Route::put('users/{id}/increase-question-count', [UserController::class, 'increaseQuestionCount']);
+Route::put('users/{id}/decrease-question-count', [UserController::class, 'decreaseQuestionCount']);
+Route::put('users/{id}/increase-answer-count', [UserController::class, 'increaseAnswerCount']);
+Route::put('users/{id}/decrease-answer-count', [UserController::class, 'decreaseAnswerCount']);
+
 
 Route::get('questions', [QuestionController::class, 'index']);
 Route::post('questions', [QuestionController::class, 'store']);

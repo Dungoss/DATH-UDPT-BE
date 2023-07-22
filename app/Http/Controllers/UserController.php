@@ -94,10 +94,9 @@ class UserController extends Controller
     public function updateAvatar(Request $request, $userID)
     {
         $validatedData = $request->validate([
-            'avatar' => 'required|url', // Assuming the avatar is a URL. You can adjust the validation rule as needed.
+            'avatar' => 'required|url',
         ]);
 
-        // Check if the user exists in the users table.
         $user = DB::table('users')->where('id', $userID)->first();
 
         if (!$user) {
@@ -106,7 +105,6 @@ class UserController extends Controller
             ], 404);
         }
 
-        // Update the avatar for the user.
         DB::table('users')
             ->where('id', $userID)
             ->update([
@@ -121,10 +119,9 @@ class UserController extends Controller
     public function updateWallpaper(Request $request, $userID)
     {
         $validatedData = $request->validate([
-            'wallpaper' => 'required|url', // Assuming the wallpaper is a URL. You can adjust the validation rule as needed.
+            'wallpaper' => 'required|url',
         ]);
 
-        // Check if the user exists in the users table.
         $user = DB::table('users')->where('id', $userID)->first();
 
         if (!$user) {
@@ -133,7 +130,6 @@ class UserController extends Controller
             ], 404);
         }
 
-        // Update the wallpaper for the user.
         DB::table('users')
             ->where('id', $userID)
             ->update([
@@ -147,11 +143,98 @@ class UserController extends Controller
 
     public function getQuestionsByUserID($userID)
     {
-        // Fetch all questions associated with the given userID
         $questions = DB::table('question')
             ->where('userID', $userID)
             ->get();
 
         return response()->json($questions);
+    }
+
+    public function increaseQuestionCount($userID)
+    {
+        $user = DB::table('users')->find($userID);
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'User not found',
+            ], 404);
+        }
+
+        DB::table('users')
+            ->where('id', $userID)
+            ->update([
+                'question_count' => $user->question_count + 1,
+            ]);
+
+        return response()->json([
+            'message' => 'question_count increased successfully',
+        ], 200);
+    }
+
+    public function decreaseQuestionCount($userID)
+    {
+        $user = DB::table('users')->find($userID);
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'User not found',
+            ], 404);
+        }
+
+        $newQuestionCount = max(0, $user->question_count - 1);
+
+        DB::table('users')
+            ->where('id', $userID)
+            ->update([
+                'question_count' => $newQuestionCount,
+            ]);
+
+        return response()->json([
+            'message' => 'question_count decreased successfully',
+        ], 200);
+    }
+
+    public function increaseAnswerCount($userID)
+    {
+        $user = DB::table('users')->find($userID);
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'User not found',
+            ], 404);
+        }
+
+        DB::table('users')
+            ->where('id', $userID)
+            ->update([
+                'answer_count' => $user->answer_count + 1,
+            ]);
+
+        return response()->json([
+            'message' => 'answer_count increased successfully',
+        ], 200);
+    }
+
+    public function decreaseAnswerCount($userID)
+    {
+        $user = DB::table('users')->find($userID);
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'User not found',
+            ], 404);
+        }
+
+        $newAnswerCount = max(0, $user->answer_count - 1);
+
+        DB::table('users')
+            ->where('id', $userID)
+            ->update([
+                'answer_count' => $newAnswerCount,
+            ]);
+
+        return response()->json([
+            'message' => 'answer_count decreased successfully',
+        ], 200);
     }
 }
