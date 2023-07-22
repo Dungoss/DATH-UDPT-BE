@@ -25,9 +25,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('users', [UserController::class, 'index']);
+Route::get('users/{id}', [UserController::class, 'findUser']);
+Route::get('/users/{userID}/questions', [UserController::class, 'getQuestionsByUserID']);
 Route::get('users/{id}/question-spam', [UserController::class, 'getQuestionIDsByUserID']);
 Route::post('users/add-spam', [UserController::class, 'storeQuestionSpam']);
 Route::post('users/delete-spam', [UserController::class, 'deleteQuestionSpam']);
+Route::post('users/{id}/update-avatar', [UserController::class, 'updateAvatar']);
+Route::post('users/{id}/update-wallpaper', [UserController::class, 'updateWallpaper']);
 
 Route::get('questions', [QuestionController::class, 'index']);
 Route::post('questions', [QuestionController::class, 'store']);

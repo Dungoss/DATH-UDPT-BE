@@ -14,6 +14,20 @@ class UserController extends Controller
         return response()->json($users);
     }
 
+    public function findUser($userID)
+    {
+        $user = DB::table('users')->find($userID);
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'User not found',
+            ], 404);
+        }
+
+        return response()->json($user);
+    }
+
+
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -75,5 +89,69 @@ class UserController extends Controller
                 'message' => 'Item not found',
             ], 404);
         }
+    }
+
+    public function updateAvatar(Request $request, $userID)
+    {
+        $validatedData = $request->validate([
+            'avatar' => 'required|url', // Assuming the avatar is a URL. You can adjust the validation rule as needed.
+        ]);
+
+        // Check if the user exists in the users table.
+        $user = DB::table('users')->where('id', $userID)->first();
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'User not found',
+            ], 404);
+        }
+
+        // Update the avatar for the user.
+        DB::table('users')
+            ->where('id', $userID)
+            ->update([
+                'avatar' => $validatedData['avatar'],
+            ]);
+
+        return response()->json([
+            'message' => 'Avatar updated successfully',
+        ], 200);
+    }
+
+    public function updateWallpaper(Request $request, $userID)
+    {
+        $validatedData = $request->validate([
+            'wallpaper' => 'required|url', // Assuming the wallpaper is a URL. You can adjust the validation rule as needed.
+        ]);
+
+        // Check if the user exists in the users table.
+        $user = DB::table('users')->where('id', $userID)->first();
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'User not found',
+            ], 404);
+        }
+
+        // Update the wallpaper for the user.
+        DB::table('users')
+            ->where('id', $userID)
+            ->update([
+                'wallpaper' => $validatedData['wallpaper'],
+            ]);
+
+        return response()->json([
+            'message' => 'Wallpaper updated successfully',
+        ], 200);
+    }
+
+    public function getQuestionsByUserID($userID)
+    {
+        // Fetch all questions associated with the given userID
+        $questions = DB::table('question')
+            ->where('userID', $userID)
+            ->get();
+
+        return response()->json($questions);
     }
 }
