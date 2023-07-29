@@ -44,6 +44,7 @@ Route::delete('questions/{id}', [QuestionController::class, 'destroy']);
 Route::put('questions/{id}/status', [QuestionController::class, 'updateStatusApproved']);
 Route::post('questions/{id}/spam', [QuestionController::class, 'increaseSpamCount']);
 Route::post('questions/{id}/not-spam', [QuestionController::class, 'decreaseSpamCount']);
+Route::get('questions/monthly-ranking', [QuestionController::class, 'getMonthlyRanking']);
 
 
 Route::get('comments', [CommentController::class, 'index']);
@@ -51,6 +52,7 @@ Route::post('comments', [CommentController::class, 'store']);
 
 Route::get('answers', [AnswerController::class, 'index']);
 Route::post('answers', [AnswerController::class, 'store']);
+Route::get('answers/monthly-ranking', [AnswerController::class, 'getMonthlyRanking']);
 
 Route::get('category', [CategoryController::class, 'index']);
 Route::post('category', [CategoryController::class, 'store']);

@@ -110,4 +110,49 @@ class QuestionController extends Controller
             'message' => 'Spam count decreased successfully',
         ]);
     }
+
+    public function getMonthlyRanking()
+    {
+        // Get the current Unix timestamp
+        $currentTimestamp = time();
+
+        // Calculate the Unix timestamp of 1 month ago from the current time
+        $oneMonthAgoTimestamp = $currentTimestamp - (30 * 24 * 60 * 60); // 30 days * 24 hours * 60 minutes * 60 seconds
+
+        // Fetch questions where postingTime is within 1 month from now
+        $questions = DB::table('question')
+            ->where('postingTime', '>=', $oneMonthAgoTimestamp)
+            ->orderBy('postingTime', 'desc')
+            ->get();
+
+        // Count the number of questions for each userID
+        $userQuestionCounts = [];
+        foreach ($questions as $question) {
+            $userID = $question->userID;
+            if (isset($userQuestionCounts[$userID])) {
+                $userQuestionCounts[$userID]++;
+            } else {
+                $userQuestionCounts[$userID] = 1;
+            }
+        }
+
+        // Get the user data for each userID
+        $usersData = [];
+        foreach ($userQuestionCounts as $userID => $numQuest) {
+            $userData = DB::table('users')->where('id', $userID)->first();
+            if ($userData) {
+                $usersData[] = [
+                    'userID' => $userID,
+                    'num_quest' => $numQuest,
+                    'user_data' => $userData,
+                ];
+            }
+        }
+
+        usort($usersData, function ($a, $b) {
+            return $b['num_quest'] - $a['num_quest'];
+        });
+
+        return response()->json($usersData);
+    }
 }
