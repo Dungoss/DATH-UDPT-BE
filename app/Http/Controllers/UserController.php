@@ -51,6 +51,16 @@ class UserController extends Controller
         return response()->json($questionIDs);
     }
 
+    public function getUserStarForQuestions($userID)
+    {
+        $questionIDs = DB::table('user_question_star')
+            ->where('userID', $userID)
+            ->pluck('star', 'questionID')
+            ->all();
+
+        return response()->json($questionIDs);
+    }
+
     public function storeQuestionSpam(Request $request)
     {
         $validatedData = $request->validate([
@@ -67,6 +77,45 @@ class UserController extends Controller
             'message' => 'Item added to user_question_spam successfully',
         ], 201);
     }
+
+    public function storeQuestionStar(Request $request)
+    {
+        $validatedData = $request->validate([
+            'userID' => 'required',
+            'questionID' => 'required',
+            'star' => 'required',
+        ]);
+
+        $userID = $validatedData['userID'];
+        $questionID = $validatedData['questionID'];
+        $star = $validatedData['star'];
+
+        // Check if the combination of userID and questionID already exists in the table
+        $existingData = DB::table('user_question_star')
+            ->where('userID', $userID)
+            ->where('questionID', $questionID)
+            ->first();
+
+        if ($existingData) {
+            // If the combination exists, update the star value
+            DB::table('user_question_star')
+                ->where('userID', $userID)
+                ->where('questionID', $questionID)
+                ->update(['star' => $star]);
+        } else {
+            // If the combination doesn't exist, insert a new record
+            DB::table('user_question_star')->insert([
+                'userID' => $userID,
+                'questionID' => $questionID,
+                'star' => $star,
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Item added to user_question_star successfully',
+        ], 201);
+    }
+
 
     public function deleteQuestionSpam(Request $request)
     {

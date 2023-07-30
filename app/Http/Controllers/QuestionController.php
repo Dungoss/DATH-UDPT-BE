@@ -113,19 +113,15 @@ class QuestionController extends Controller
 
     public function getMonthlyRanking()
     {
-        // Get the current Unix timestamp
         $currentTimestamp = time();
 
-        // Calculate the Unix timestamp of 1 month ago from the current time
-        $oneMonthAgoTimestamp = $currentTimestamp - (30 * 24 * 60 * 60); // 30 days * 24 hours * 60 minutes * 60 seconds
+        $oneMonthAgoTimestamp = $currentTimestamp - (30 * 24 * 60 * 60);
 
-        // Fetch questions where postingTime is within 1 month from now
         $questions = DB::table('question')
             ->where('postingTime', '>=', $oneMonthAgoTimestamp)
             ->orderBy('postingTime', 'desc')
             ->get();
 
-        // Count the number of questions for each userID
         $userQuestionCounts = [];
         foreach ($questions as $question) {
             $userID = $question->userID;
@@ -136,7 +132,6 @@ class QuestionController extends Controller
             }
         }
 
-        // Get the user data for each userID
         $usersData = [];
         foreach ($userQuestionCounts as $userID => $numQuest) {
             $userData = DB::table('users')->where('id', $userID)->first();
@@ -154,5 +149,41 @@ class QuestionController extends Controller
         });
 
         return response()->json($usersData);
+    }
+
+    public function searchQuestionsByKeyword(Request $request)
+    {
+
+        $request->validate([
+            'keyword' => 'required|string',
+        ]);
+
+        $keyword = $request->input('keyword');
+
+        $questions = DB::table('question')
+            ->where(function ($query) use ($keyword) {
+                $query->where('questionTitle', 'like', '%' . $keyword . '%')
+                    ->orWhere('questionContent', 'like', '%' . $keyword . '%');
+            })
+            ->orderBy('postingTime', 'desc')
+            ->get();
+
+        return response()->json($questions);
+    }
+
+    public function searchQuestionsByTagID(Request $request)
+    {
+        $request->validate([
+            'tagID' => 'required|string',
+        ]);
+
+        $tagID = $request->input('tagID');
+
+        $questions = DB::table('question')
+            ->where('tagID', 'like', '%' . $tagID . '%')
+            ->orderBy('postingTime', 'desc')
+            ->get();
+
+        return response()->json($questions);
     }
 }

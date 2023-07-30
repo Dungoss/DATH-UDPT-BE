@@ -28,7 +28,9 @@ Route::get('users', [UserController::class, 'index']);
 Route::get('users/{id}', [UserController::class, 'findUser']);
 Route::get('/users/{userID}/questions', [UserController::class, 'getQuestionsByUserID']);
 Route::get('users/{id}/question-spam', [UserController::class, 'getQuestionIDsByUserID']);
+Route::get('users/{id}/question-star', [UserController::class, 'getUserStarForQuestions']);
 Route::post('users/add-spam', [UserController::class, 'storeQuestionSpam']);
+Route::post('users/add-star', [UserController::class, 'storeQuestionStar']);
 Route::post('users/delete-spam', [UserController::class, 'deleteQuestionSpam']);
 Route::post('users/{id}/update-avatar', [UserController::class, 'updateAvatar']);
 Route::post('users/{id}/update-wallpaper', [UserController::class, 'updateWallpaper']);
@@ -45,7 +47,8 @@ Route::put('questions/{id}/status', [QuestionController::class, 'updateStatusApp
 Route::post('questions/{id}/spam', [QuestionController::class, 'increaseSpamCount']);
 Route::post('questions/{id}/not-spam', [QuestionController::class, 'decreaseSpamCount']);
 Route::get('questions/monthly-ranking', [QuestionController::class, 'getMonthlyRanking']);
-
+Route::get('questions/search-keyword', [QuestionController::class, 'searchQuestionsByKeyword']);
+Route::get('questions/search-tag', [QuestionController::class, 'searchQuestionsByTagID']);
 
 Route::get('comments', [CommentController::class, 'index']);
 Route::post('comments', [CommentController::class, 'store']);
