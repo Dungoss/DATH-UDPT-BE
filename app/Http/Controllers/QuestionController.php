@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Config;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -185,5 +186,39 @@ class QuestionController extends Controller
             ->get();
 
         return response()->json($questions);
+    }
+
+    public function autoApprove()
+    {
+        $bannedWords = Config::get('banned-word.banned_words');
+
+        $questions = DB::table('question')
+            ->where('statusApproved', 0)
+            ->get();
+
+        foreach ($questions as $question) {
+            $titleContainsBannedWord = false;
+            $contentContainsBannedWord = false;
+
+            foreach ($bannedWords as $bannedWord) {
+                if (strpos($question->questionTitle, $bannedWord) !== false) {
+                    $titleContainsBannedWord = true;
+                    break;
+                }
+
+                if (strpos($question->questionContent, $bannedWord) !== false) {
+                    $contentContainsBannedWord = true;
+                    break;
+                }
+            }
+
+            if (!$titleContainsBannedWord || !$contentContainsBannedWord) {
+                DB::table('question')
+                    ->where('id', $question->id)
+                    ->update(['statusApproved' => 1]);
+            }
+        }
+
+        return response()->json(['message' => 'Banned questions have been approved.']);
     }
 }

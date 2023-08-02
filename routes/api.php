@@ -25,8 +25,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('users', [UserController::class, 'index']);
+Route::get('users/admin-email', [UserController::class, 'getAdminAcceptNoti']);
 Route::get('users/{id}', [UserController::class, 'findUser']);
-Route::get('/users/{userID}/questions', [UserController::class, 'getQuestionsByUserID']);
+Route::get('users/{userID}/questions', [UserController::class, 'getQuestionsByUserID']);
 Route::get('users/{id}/question-spam', [UserController::class, 'getQuestionIDsByUserID']);
 Route::get('users/{id}/question-star', [UserController::class, 'getUserStarForQuestions']);
 Route::post('users/add-spam', [UserController::class, 'storeQuestionSpam']);
@@ -38,12 +39,13 @@ Route::put('users/{id}/increase-question-count', [UserController::class, 'increa
 Route::put('users/{id}/decrease-question-count', [UserController::class, 'decreaseQuestionCount']);
 Route::put('users/{id}/increase-answer-count', [UserController::class, 'increaseAnswerCount']);
 Route::put('users/{id}/decrease-answer-count', [UserController::class, 'decreaseAnswerCount']);
-
+Route::put('users/{id}/accept-noti', [UserController::class, 'updateAcceptNoti']);
 
 Route::get('questions', [QuestionController::class, 'index']);
 Route::post('questions', [QuestionController::class, 'store']);
 Route::delete('questions/{id}', [QuestionController::class, 'destroy']);
 Route::put('questions/{id}/status', [QuestionController::class, 'updateStatusApproved']);
+Route::put('questions/auto-approve', [QuestionController::class, 'autoApprove']);
 Route::post('questions/{id}/spam', [QuestionController::class, 'increaseSpamCount']);
 Route::post('questions/{id}/not-spam', [QuestionController::class, 'decreaseSpamCount']);
 Route::get('questions/monthly-ranking', [QuestionController::class, 'getMonthlyRanking']);

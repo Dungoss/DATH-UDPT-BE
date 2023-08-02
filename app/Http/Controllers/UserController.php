@@ -286,4 +286,33 @@ class UserController extends Controller
             'message' => 'answer_count decreased successfully',
         ], 200);
     }
+
+    public function getAdminAcceptNoti()
+    {
+        $adminUsers = DB::table('users')
+            ->where('role', '=', 'admin')
+            ->where('accept_noti', '=', '1')
+            ->pluck('email');
+
+        return response()->json($adminUsers);
+    }
+
+    public function updateAcceptNoti(Request $request, $id)
+    {
+        $request->validate([
+            'accept_noti' => 'required|integer|in:0,1', // Accepts only 0 or 1 as integers
+        ]);
+
+        $acceptNoti = $request->input('accept_noti');
+
+        try {
+            DB::table('users')
+                ->where('id', $id)
+                ->update(['accept_noti' => $acceptNoti]);
+
+            return response()->json(['message' => 'Accept notification updated successfully.']);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Failed to update accept notification.'], 500);
+        }
+    }
 }
