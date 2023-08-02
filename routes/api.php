@@ -41,17 +41,6 @@ Route::put('users/{id}/increase-answer-count', [UserController::class, 'increase
 Route::put('users/{id}/decrease-answer-count', [UserController::class, 'decreaseAnswerCount']);
 Route::put('users/{id}/accept-noti', [UserController::class, 'updateAcceptNoti']);
 
-Route::get('questions', [QuestionController::class, 'index']);
-Route::post('questions', [QuestionController::class, 'store']);
-Route::delete('questions/{id}', [QuestionController::class, 'destroy']);
-Route::put('questions/{id}/status', [QuestionController::class, 'updateStatusApproved']);
-Route::put('questions/auto-approve', [QuestionController::class, 'autoApprove']);
-Route::post('questions/{id}/spam', [QuestionController::class, 'increaseSpamCount']);
-Route::post('questions/{id}/not-spam', [QuestionController::class, 'decreaseSpamCount']);
-Route::get('questions/monthly-ranking', [QuestionController::class, 'getMonthlyRanking']);
-Route::get('questions/search-keyword', [QuestionController::class, 'searchQuestionsByKeyword']);
-Route::get('questions/search-tag', [QuestionController::class, 'searchQuestionsByTagID']);
-
 Route::get('comments', [CommentController::class, 'index']);
 Route::post('comments', [CommentController::class, 'store']);
 
@@ -67,7 +56,6 @@ Route::post('tag', [TagController::class, 'store']);
 
 Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);
-
 
 Route::group(['middleware' => 'api'], function () {
     Route::post('logout', [AuthController::class, 'logout']);
