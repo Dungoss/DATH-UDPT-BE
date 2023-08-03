@@ -36,7 +36,10 @@ class AnswerController extends Controller
             'totalVotes' => $validatedData['totalVotes'],
         ]);
 
-        // Return a JSON response
+        DB::table('question')
+            ->where('id', $validatedData['questionID'])
+            ->increment('totalAnswer');
+
         return response()->json([
             'message' => 'Answer created successfully',
         ], 201);

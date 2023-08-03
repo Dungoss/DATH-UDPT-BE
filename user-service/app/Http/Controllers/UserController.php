@@ -90,26 +90,27 @@ class UserController extends Controller
         $questionID = $validatedData['questionID'];
         $star = $validatedData['star'];
 
-        // Check if the combination of userID and questionID already exists in the table
         $existingData = DB::table('user_question_star')
             ->where('userID', $userID)
             ->where('questionID', $questionID)
             ->first();
 
         if ($existingData) {
-            // If the combination exists, update the star value
             DB::table('user_question_star')
                 ->where('userID', $userID)
                 ->where('questionID', $questionID)
                 ->update(['star' => $star]);
         } else {
-            // If the combination doesn't exist, insert a new record
             DB::table('user_question_star')->insert([
                 'userID' => $userID,
                 'questionID' => $questionID,
                 'star' => $star,
             ]);
         }
+
+        DB::table('question')
+            ->where('id', $questionID)
+            ->increment('totalVotes');
 
         return response()->json([
             'message' => 'Item added to user_question_star successfully',
