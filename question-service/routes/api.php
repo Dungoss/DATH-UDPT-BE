@@ -17,6 +17,7 @@ use App\Http\Controllers\QuestionController;
 
 Route::get('questions', [QuestionController::class, 'index']);
 Route::post('questions', [QuestionController::class, 'store']);
+Route::get('questions/treding-category', [QuestionController::class, 'getTop5Category']);
 Route::delete('questions/{id}', [QuestionController::class, 'destroy']);
 Route::put('questions/{id}/status', [QuestionController::class, 'updateStatusApproved']);
 Route::put('questions/auto-approve', [QuestionController::class, 'autoApprove']);

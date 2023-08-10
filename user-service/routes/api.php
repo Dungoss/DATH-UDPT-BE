@@ -36,8 +36,10 @@ Route::put('users/{id}/increase-answer-count', [UserController::class, 'increase
 Route::put('users/{id}/decrease-answer-count', [UserController::class, 'decreaseAnswerCount']);
 Route::put('users/{id}/accept-noti', [UserController::class, 'updateAcceptNoti']);
 
+
 Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);
+
 
 Route::group(['middleware' => 'api'], function () {
     Route::post('logout', [AuthController::class, 'logout']);

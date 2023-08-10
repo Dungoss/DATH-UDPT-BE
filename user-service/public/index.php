@@ -5,6 +5,25 @@ use Illuminate\Http\Request;
 
 define('LARAVEL_START', microtime(true));
 
+
+// $allowedOrigins = array(
+//     'http://localhost:8000',
+//     'http://localhost:3000'
+// );
+// if (isset($_SERVER['HTTP_ORIGIN']) && $_SERVER['HTTP_ORIGIN'] != '') {
+//     foreach ($allowedOrigins as $allowedOrigin) {
+//         if (preg_match('#' . $allowedOrigin . '#', $_SERVER['HTTP_ORIGIN'])) {
+//             header('Access-Control-Allow-Origin: ' . $_SERVER['HTTP_ORIGIN']);
+//             header('Access-Control-Allow-Credentials: true');
+//             header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
+//             header('Access-Control-Max-Age: 1728000');
+//             header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token,
+//             Authorization, X-Requested-With, Content-Range, Content-Disposition,
+//             Content-Description, x-xsrf-token, ip');
+//             break;
+//         }
+//     }
+// }
 /*
 |--------------------------------------------------------------------------
 | Check If The Application Is Under Maintenance
@@ -16,7 +35,7 @@ define('LARAVEL_START', microtime(true));
 |
 */
 
-if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php')) {
+if (file_exists($maintenance = __DIR__ . '/../storage/framework/maintenance.php')) {
     require $maintenance;
 }
 
@@ -31,7 +50,7 @@ if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php'))
 |
 */
 
-require __DIR__.'/../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 /*
 |--------------------------------------------------------------------------
@@ -44,7 +63,7 @@ require __DIR__.'/../vendor/autoload.php';
 |
 */
 
-$app = require_once __DIR__.'/../bootstrap/app.php';
+$app = require_once __DIR__ . '/../bootstrap/app.php';
 
 $kernel = $app->make(Kernel::class);
 

@@ -203,22 +203,37 @@ class QuestionController extends Controller
             foreach ($bannedWords as $bannedWord) {
                 if (strpos($question->questionTitle, $bannedWord) !== false) {
                     $titleContainsBannedWord = true;
-                    break;
                 }
 
                 if (strpos($question->questionContent, $bannedWord) !== false) {
                     $contentContainsBannedWord = true;
-                    break;
                 }
             }
 
-            if (!$titleContainsBannedWord || !$contentContainsBannedWord) {
+            if (!$titleContainsBannedWord && !$contentContainsBannedWord) {
                 DB::table('question')
                     ->where('id', $question->id)
                     ->update(['statusApproved' => 1]);
             }
         }
 
-        return response()->json(['message' => 'Banned questions have been approved.']);
+        return response()->json(['message' => 'Auto approve success!']);
+    }
+
+
+    public function getTop5Category()
+    {
+        $categoryCounts = DB::table('question')
+            ->select('categoryID', DB::raw('count(*) as count'))
+            ->groupBy('categoryID')
+            ->orderBy('count', 'desc')
+            ->pluck('categoryID')
+            ->take(5);
+
+        $topCategories = DB::table('category')
+            ->whereIn('categoryID', $categoryCounts)
+            ->get();
+
+        return response()->json($topCategories);
     }
 }
