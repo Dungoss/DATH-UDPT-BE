@@ -188,6 +188,23 @@ class QuestionController extends Controller
         return response()->json($questions);
     }
 
+    public function searchQuestionsByCategoryID(Request $request)
+    {
+        $request->validate([
+            'categoryID' => 'required|integer',
+        ]);
+
+        $categoryID = $request->input('categoryID');
+
+        $questions = DB::table('question')
+            ->where('categoryID', $categoryID)
+            ->orderBy('postingTime', 'desc')
+            ->get();
+
+        return response()->json($questions);
+    }
+
+
     public function autoApprove()
     {
         $bannedWords = Config::get('banned-word.banned_words');
@@ -201,23 +218,23 @@ class QuestionController extends Controller
             $contentContainsBannedWord = false;
 
             foreach ($bannedWords as $bannedWord) {
-                if (strpos($question->questionTitle, $bannedWord) !== false) {
+                if (stripos($question->questionTitle, $bannedWord) !== false) {
                     $titleContainsBannedWord = true;
                 }
 
-                if (strpos($question->questionContent, $bannedWord) !== false) {
+                if (stripos($question->questionContent, $bannedWord) !== false) {
                     $contentContainsBannedWord = true;
                 }
             }
 
-            if (!$titleContainsBannedWord && !$contentContainsBannedWord) {
+            if ($titleContainsBannedWord == false && !$contentContainsBannedWord == false) {
                 DB::table('question')
                     ->where('id', $question->id)
                     ->update(['statusApproved' => 1]);
             }
         }
 
-        return response()->json(['message' => 'Auto approve success!']);
+        return response()->json(['message' => 'auto approve success!']);
     }
 
 

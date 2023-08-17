@@ -26,3 +26,4 @@ Route::post('questions/{id}/not-spam', [QuestionController::class, 'decreaseSpam
 Route::get('questions/monthly-ranking', [QuestionController::class, 'getMonthlyRanking']);
 Route::get('questions/search-keyword', [QuestionController::class, 'searchQuestionsByKeyword']);
 Route::get('questions/search-tag', [QuestionController::class, 'searchQuestionsByTagID']);
+Route::get('questions/search-category', [QuestionController::class, 'searchQuestionsBycategoryID']);
