@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ExcelCSVController;
-
+use App\Http\Controllers\OpenAIController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,4 +18,7 @@ use App\Http\Controllers\ExcelCSVController;
 Route::get('excel-csv-file', [ExcelCSVController::class, 'index']);
 Route::post('import-excel-csv-file', [ExcelCSVController::class, 'importExcelCSV']);
 Route::get('export-excel-csv-file', [ExcelCSVController::class, 'exportExcelCSV']);
+
+Route::get('open-ai', [OpenAIController::class, 'index']);
+
 
