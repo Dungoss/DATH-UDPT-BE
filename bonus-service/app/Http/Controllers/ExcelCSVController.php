@@ -5,12 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
  
 use App\Exports\QuestionExport;
+use App\Exports\QuestionImport;
  
-use App\Imports\UsersImport;
  
 use Maatwebsite\Excel\Facades\Excel;
  
-use App\Models\User;
  
 class ExcelCSVController extends Controller
 {
@@ -33,7 +32,7 @@ class ExcelCSVController extends Controller
  
         ]);
  
-        Excel::import(new UsersImport,$request->file('file'));
+        Excel::import(new QuestionImport,$request->file('file'));
  
             
         return redirect('excel-csv-file')->with('status', 'The file has been excel/csv imported to database in laravel 9');

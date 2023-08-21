@@ -32,6 +32,7 @@ class OpenAIController extends Controller
                   ])
                   ->json();
   
-        return response()->json($data);
+        return response()->json($data['choices'][0]['message'], 200, array(), JSON_PRETTY_PRINT);
+
     }
 }
