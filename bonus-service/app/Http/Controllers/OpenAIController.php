@@ -13,9 +13,9 @@ class OpenAIController extends Controller
      *
      * @return response()
      */
-    public function index(): JsonResponse
+    public function index(Request $request)
     {
-        $search = "laravel get ip address";
+        $search = $request["question"];
   
         $data = Http::withHeaders([
                     'Content-Type' => 'application/json',
