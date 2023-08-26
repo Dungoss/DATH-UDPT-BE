@@ -17,6 +17,15 @@ class QuestionController extends Controller
         return response()->json($questions);
     }
 
+    public function filterPopular()
+    {
+        $questions = DB::table('question')
+            ->orderBy('totalAnswer', 'desc')
+            ->get();
+
+        return response()->json($questions);
+    }
+
     public function store(Request $request)
     {
         $validatedData = $request->validate([

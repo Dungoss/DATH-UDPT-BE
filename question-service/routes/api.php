@@ -16,6 +16,7 @@ use App\Http\Controllers\QuestionController;
 */
 
 Route::get('questions', [QuestionController::class, 'index']);
+Route::get('questions/popular', [QuestionController::class, 'filterPopular']);
 Route::post('questions', [QuestionController::class, 'store']);
 Route::get('questions/treding-category', [QuestionController::class, 'getTop5Category']);
 Route::delete('questions/{id}', [QuestionController::class, 'destroy']);
