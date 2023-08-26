@@ -19,6 +19,15 @@ class QuestionController extends Controller
         return response()->json($questions);
     }
 
+    public function filterPopular()
+    {
+        $questions = DB::table('question')
+            ->orderBy('totalAnswer', 'desc')
+            ->get();
+
+        return response()->json($questions);
+    }
+
     public function store(Request $request)
         {
             $validatedData = $request->validate([
@@ -32,6 +41,7 @@ class QuestionController extends Controller
                 'statusApproved' => 'required',
                 'tagID' => 'required',
                 'spam' => 'required',
+                'images' => 'required',
             ]);
             DB::table('question')->insert([
                 'userID' => $validatedData['userID'],
@@ -44,6 +54,7 @@ class QuestionController extends Controller
                 'statusApproved' => $validatedData['statusApproved'],
                 'tagID' => $validatedData['tagID'],
                 'spam' => $validatedData['spam'],
+                'images' => $validatedData['images'],
             ]);
     
             $questions = DB::table('question')
