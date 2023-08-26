@@ -227,14 +227,14 @@ class QuestionController extends Controller
                 }
             }
 
-            if ($titleContainsBannedWord == false && !$contentContainsBannedWord == false) {
+            if ($titleContainsBannedWord == false && $contentContainsBannedWord == false) {
                 DB::table('question')
                     ->where('id', $question->id)
                     ->update(['statusApproved' => 1]);
             }
         }
 
-        return response()->json(['message' => 'auto approve success!']);
+        return response()->json($contentContainsBannedWord);
     }
 
 

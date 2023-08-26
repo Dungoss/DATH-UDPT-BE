@@ -41,6 +41,40 @@ class UserController extends Controller
         ], 201);
     }
 
+    public function changePassword(Request $request, $userID)
+    {
+        $validatedData = $request->validate([
+            'current_password' => 'required',
+            'new_password' => 'required|min:8',
+        ]);
+
+        $user = DB::table('users')->where('id', $userID)->first();
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'User not found',
+            ], 404);
+        }
+
+        if (!password_verify($validatedData['current_password'], $user->password)) {
+            return response()->json([
+                'message' => 'Current password is incorrect',
+            ], 400);
+        }
+
+        $newPasswordHash = bcrypt($validatedData['new_password']);
+        DB::table('users')
+            ->where('id', $userID)
+            ->update([
+                'password' => $newPasswordHash,
+            ]);
+
+        return response()->json([
+            'message' => 'Password changed successfully',
+        ], 200);
+    }
+
+
     public function getQuestionIDsByUserID($userID)
     {
         $questionIDs = DB::table('user_question_spam')

@@ -14,6 +14,20 @@ class TagController extends Controller
         return response()->json($categorys);
     }
 
+    public function getTag()
+    {
+        $categories = DB::table('tag')->distinct('categoryID')->pluck('categoryID');
+
+        $tags = [];
+
+        foreach ($categories as $category) {
+            $tagsInCategory = DB::table('tag')->where('categoryID', $category)->take(3)->get()->toArray();
+            $tags = array_merge($tags, $tagsInCategory);
+        }
+
+        return response()->json($tags);
+    }
+
     public function store(Request $request)
     {
         // Validate the request data

@@ -28,4 +28,5 @@ Route::get('category', [CategoryController::class, 'index']);
 Route::post('category', [CategoryController::class, 'store']);
 
 Route::get('tag', [TagController::class, 'index']);
+Route::get('tag-cloud', [TagController::class, 'getTag']);
 Route::post('tag', [TagController::class, 'store']);
