@@ -30,6 +30,7 @@ class QuestionController extends Controller
             'statusApproved' => 'required',
             'tagID' => 'required',
             'spam' => 'required',
+            'images' => 'required',
         ]);
         DB::table('question')->insert([
             'userID' => $validatedData['userID'],
@@ -42,6 +43,7 @@ class QuestionController extends Controller
             'statusApproved' => $validatedData['statusApproved'],
             'tagID' => $validatedData['tagID'],
             'spam' => $validatedData['spam'],
+            'images' => $validatedData['images'],
         ]);
         return response()->json([
             'message' => 'Question created successfully',
