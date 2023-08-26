@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Http\JsonResponse;
 
 class QuestionController extends Controller
 {
@@ -18,35 +20,68 @@ class QuestionController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $validatedData = $request->validate([
-            'userID' => 'required',
-            'questionTitle' => 'required',
-            'questionContent' => 'required',
-            'categoryID' => 'required',
-            'totalVotes' => 'required',
-            'postingTime' => 'required',
-            'totalAnswer' => 'required',
-            'statusApproved' => 'required',
-            'tagID' => 'required',
-            'spam' => 'required',
-        ]);
-        DB::table('question')->insert([
-            'userID' => $validatedData['userID'],
-            'questionTitle' => $validatedData['questionTitle'],
-            'questionContent' => $validatedData['questionContent'],
-            'categoryID' => $validatedData['categoryID'],
-            'totalVotes' => $validatedData['totalVotes'],
-            'postingTime' => $validatedData['postingTime'],
-            'totalAnswer' => $validatedData['totalAnswer'],
-            'statusApproved' => $validatedData['statusApproved'],
-            'tagID' => $validatedData['tagID'],
-            'spam' => $validatedData['spam'],
-        ]);
-        return response()->json([
-            'message' => 'Question created successfully',
-        ], 201);
-    }
+        {
+            $validatedData = $request->validate([
+                'userID' => 'required',
+                'questionTitle' => 'required',
+                'questionContent' => 'required',
+                'categoryID' => 'required',
+                'totalVotes' => 'required',
+                'postingTime' => 'required',
+                'totalAnswer' => 'required',
+                'statusApproved' => 'required',
+                'tagID' => 'required',
+                'spam' => 'required',
+            ]);
+            DB::table('question')->insert([
+                'userID' => $validatedData['userID'],
+                'questionTitle' => $validatedData['questionTitle'],
+                'questionContent' => $validatedData['questionContent'],
+                'categoryID' => $validatedData['categoryID'],
+                'totalVotes' => $validatedData['totalVotes'],
+                'postingTime' => $validatedData['postingTime'],
+                'totalAnswer' => $validatedData['totalAnswer'],
+                'statusApproved' => $validatedData['statusApproved'],
+                'tagID' => $validatedData['tagID'],
+                'spam' => $validatedData['spam'],
+            ]);
+    
+            $questions = DB::table('question')
+                ->orderBy('postingTime', 'desc')
+                ->get();
+    
+            $data = Http::withHeaders([
+                'Content-Type' => 'application/json',
+                'Authorization' => $request->header('Authorization')
+              ])
+              ->post("http://localhost:8003/api/open-ai", [
+                "question" => $validatedData['questionContent'],
+              ])
+              ->json();
+            
+            if($data) {
+                $question = DB::table('question')
+                ->orderByDesc('postingTime')
+                ->first();
+              
+                // Insert a new record into the answer table
+                DB::table('answer')->insert([
+                    'questionID' => $question->id,
+                    'userID' => 9,
+                    'summaryContent' => $data,
+                    'fullContent' => $data,
+                ]);
+
+                DB::table('question')
+                    ->where('id', $question->id)
+                    ->increment('totalAnswer');
+    
+            }
+         
+            return response()->json([
+                'message' => 'Question created successfully',
+            ], 201);
+        }
 
     public function destroy($id)
     {
