@@ -19,6 +19,6 @@ Route::get('excel-csv-file', [ExcelCSVController::class, 'index']);
 Route::post('import-excel-csv-file', [ExcelCSVController::class, 'importExcelCSV']);
 Route::get('export-excel-csv-file', [ExcelCSVController::class, 'exportExcelCSV']);
 
-Route::get('open-ai', [OpenAIController::class, 'index']);
+Route::post('open-ai', [OpenAIController::class, 'index']);
 
 
