@@ -15,6 +15,9 @@ class OpenAIController extends Controller
      */
     public function index(Request $request)
     {
+        if ($request->header('Authorization') !== env('GPT_KEY')) {
+          return response()->json(['error' => 'Unauthorized'], 401);
+        }
         $search = $request["question"];
   
         $data = Http::withHeaders([
